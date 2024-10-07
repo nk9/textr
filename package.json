@@ -19,8 +19,10 @@
     "@mui/material-nextjs": "latest",
     "next": "latest",
     "prop-types": "latest",
+    "qrcode.react": "^4.0.1",
     "react": "latest",
-    "react-dom": "latest"
+    "react-dom": "latest",
+    "string-template": "^1.0.0"
   },
   "devDependencies": {
     "eslint": "latest",
