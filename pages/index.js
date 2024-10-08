@@ -103,13 +103,13 @@ export default function Index() {
   let fakeQRCode = "https://apple.com";
 
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="md">
       <Typography variant="h4" component="h1" sx={{ mb: 2 }}>
         Textr
       </Typography>
 
-      <Grid container spacing={1}>
-        <Grid size={5}>
+      <Grid container spacing={{ md: 4, sm: 3 }}>
+        <Grid size={6}>
           <Box>
             <TextField
               value={myName}
@@ -121,7 +121,7 @@ export default function Index() {
               <CancelIcon fontSize="inherit" />
             </IconButton>
           </Box>
-          <Box sx={{ mt: 4, width: '400px', display: 'flex' }}>
+          <Box sx={{ mt: 4, maxwidth: '350px', display: 'flex' }}>
             <Box sx={{ width: '370px' }}>
               <TextField
                 value={nameNumber}
@@ -136,7 +136,7 @@ export default function Index() {
             </IconButton>
           </Box>
           (Separated by a tab character. Just paste in the two cells from Google Sheets.)
-          <Box sx={{ my: 4, width: '400px' }}>
+          <Box sx={{ my: 4, maxwidth: '350px' }}>
             <TextField
               id="text-message"
               label="Text message"
@@ -151,7 +151,7 @@ export default function Index() {
             Available tokens: <Token><tt>{'{'}firstname{'}'}</tt></Token>, <Token color="blue"><tt>{'{'}myname{'}'}</tt></Token>
           </Box>
         </Grid>
-        <Grid size={4}>
+        <Grid size={{ md: 4, sm: 6 }}>
           <Item>
             <Grid container spacing={1}>
               <Grid size={3} sx={{ textAlign: 'right', fontWeight: 'bold' }}>To:</Grid>
