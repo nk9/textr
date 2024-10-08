@@ -7,6 +7,7 @@ import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import { getCookie, getCookies, setCookie } from 'cookies-next';
 import { QRCodeSVG } from 'qrcode.react';
 import { useEffect, useState } from 'react';
 import format from 'string-template';
@@ -23,15 +24,21 @@ const Item = styled(Paper)(({ theme }) => ({
   }),
 }));
 
+let MY_NAME_COOKIE = 'MY_NAME_COOKIE';
+let MESSAGE_COOKIE = 'MESSAGE_COOKIE';
+
 export default function Index() {
-  var defaultMessage = "Hi {firstname}, this is {myname} from the ONE Campaign. " +
-    "I was just checking to confirm your 3pm canvass. " +
-    "The building is locked, so park in the back. " +
-    "We will have the door propped open for you. See you soon!";
+  var defaultMessage = "Hi {firstname}, this is {myname} from the Michigan ONE Campaign. " +
+    "I just wanted to confirm that you'll be canvassing with us today at 3pm. " +
+    "Please let me know!";
+
+  getCookies();
+  let myNameCookie = getCookie(MY_NAME_COOKIE) || '';
+  let messageCookie = getCookie(MESSAGE_COOKIE) || defaultMessage;
 
   const [nameNumber, setNameNumber] = useState('')
-  const [message, setMessage] = useState(defaultMessage)
-  const [myName, setMyName] = useState('')
+  const [message, setMessage] = useState(messageCookie)
+  const [myName, setMyName] = useState(myNameCookie)
   const [name, setName] = useState('')
   const [number, setNumber] = useState('')
   const [composedMessage, setComposedMessage] = useState('');
@@ -40,7 +47,7 @@ export default function Index() {
 
   useEffect(() => {
     let result = replaceTemplateWithJSX(message, {
-      myname: <Token key="myname">{myName}</Token>,
+      myname: <Token key="myname" color='blue'>{myName}</Token>,
       firstname: <Token key="name">{name}</Token>
     });
     setComposedMessage(result)
@@ -76,6 +83,14 @@ export default function Index() {
     setName(outName);
   }, [nameNumber])
 
+  useEffect(() => {
+    setCookie(MY_NAME_COOKIE, myName)
+  }, [myName])
+
+  useEffect(() => {
+    setCookie(MESSAGE_COOKIE, message)
+  }, [message])
+
   const messageChanged = (event) => {
     setMessage(event.target.value)
   }
@@ -98,7 +113,7 @@ export default function Index() {
           <Box>
             <TextField
               value={myName}
-              label="My Name"
+              placeholder="My Name"
               variant="outlined"
               autoFocus
               onChange={(e) => setMyName(e.target.value)} />
@@ -133,7 +148,7 @@ export default function Index() {
             />
           </Box>
           <Box sx={{ my: 4 }}>
-            Available tokens: <Token><tt>{'{'}firstname{'}'}</tt></Token>, <Token><tt>{'{'}myname{'}'}</tt></Token>
+            Available tokens: <Token><tt>{'{'}firstname{'}'}</tt></Token>, <Token color="blue"><tt>{'{'}myname{'}'}</tt></Token>
           </Box>
         </Grid>
         <Grid size={4}>
@@ -157,9 +172,9 @@ export default function Index() {
   );
 }
 
-function Token({ children }) {
+function Token({ children, color = "orangered" }) {
   return (
-    <Box component="span" sx={{ color: "orangered", fontWeight: "bold" }}>
+    <Box component="span" sx={{ color: { color }, fontWeight: "bold" }}>
       {children}
     </Box>
   )

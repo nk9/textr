@@ -17,6 +17,7 @@
     "@mui/icons-material": "latest",
     "@mui/material": "latest",
     "@mui/material-nextjs": "latest",
+    "cookies-next": "^4.2.1",
     "next": "latest",
     "prop-types": "latest",
     "qrcode.react": "^4.0.1",
