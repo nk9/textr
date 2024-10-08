@@ -43,7 +43,6 @@ export default function Index() {
       myname: <Token key="myname">{myName}</Token>,
       firstname: <Token key="name">{name}</Token>
     });
-    console.log(result);
     setComposedMessage(result)
 
     let plainResult = format(message, {
@@ -51,16 +50,15 @@ export default function Index() {
       firstname: name
     });
     setPlainComposedMessage(plainResult)
-  }, [myName, name]);
+  }, [myName, name, message]);
 
   let smsto = `smsto:${number}:${plainComposedMessage}`
 
-  const nameNumberChanged = (event) => {
-    var outName = '';
-    var outNum = '';
+  useEffect(() => {
+    var outName = undefined;
+    var outNum = undefined;
 
-    let [rawName, rawNum] = event.target.value.split('\t')
-    setNameNumber(event.target.value)
+    let [rawName, rawNum] = nameNumber.split('\t')
 
     if (rawName && rawName.length > 2) {
       if (rawName.indexOf(' ') >= 0) {
@@ -76,11 +74,7 @@ export default function Index() {
 
     setNumber(outNum);
     setName(outName);
-  }
-
-  const myNameChanged = (event) => {
-    setMyName(event.target.value)
-  }
+  }, [nameNumber])
 
   const messageChanged = (event) => {
     setMessage(event.target.value)
@@ -107,7 +101,7 @@ export default function Index() {
               label="My Name"
               variant="outlined"
               autoFocus
-              onChange={myNameChanged} />
+              onChange={(e) => setMyName(e.target.value)} />
             <IconButton aria-label="delete" size="large" onClick={() => setMyName('')}>
               <CancelIcon fontSize="inherit" />
             </IconButton>
@@ -120,7 +114,7 @@ export default function Index() {
                 variant="outlined"
                 fullWidth
                 autoFocus
-                onChange={nameNumberChanged} />
+                onChange={(e) => setNameNumber(e.target.value)} />
             </Box>
             <IconButton aria-label="delete" size="large" onClick={() => setNameNumber('')}>
               <CancelIcon fontSize="inherit" />
@@ -133,7 +127,7 @@ export default function Index() {
               label="Text message"
               multiline
               value={message}
-              onChange={messageChanged}
+              onChange={(e) => setMessage(e.target.value)}
               rows={6}
               fullWidth
             />

@@ -11,8 +11,6 @@ export default function replaceTemplateWithJSX(template, replacements) {
     const key = match[1];
     const replacement = replacements[key];
 
-    console.log(match, replacement);
-
     // Add string before the placeholder
     if (match.index > lastIndex) {
       result.push(template.substring(lastIndex, match.index));
