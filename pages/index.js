@@ -84,11 +84,11 @@ export default function Index() {
   }, [nameNumber])
 
   useEffect(() => {
-    setCookie(MY_NAME_COOKIE, myName)
+    setCookie(MY_NAME_COOKIE, myName, { sameSite: true })
   }, [myName])
 
   useEffect(() => {
-    setCookie(MESSAGE_COOKIE, message)
+    setCookie(MESSAGE_COOKIE, message, { sameSite: true })
   }, [message])
 
   const messageChanged = (event) => {
