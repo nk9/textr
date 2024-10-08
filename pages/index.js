@@ -10,6 +10,7 @@ import Typography from '@mui/material/Typography';
 import { QRCodeSVG } from 'qrcode.react';
 import { useEffect, useState } from 'react';
 import format from 'string-template';
+import replaceTemplateWithJSX from '/src/replaceTemplateWithJSX';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: '#fff',
@@ -34,32 +35,47 @@ export default function Index() {
   const [name, setName] = useState('')
   const [number, setNumber] = useState('')
   const [composedMessage, setComposedMessage] = useState('');
+  const [plainComposedMessage, setPlainComposedMessage] = useState('');
 
 
   useEffect(() => {
-    setComposedMessage(format(message, {
+    let result = replaceTemplateWithJSX(message, {
+      myname: <Token key="myname">{myName}</Token>,
+      firstname: <Token key="name">{name}</Token>
+    });
+    console.log(result);
+    setComposedMessage(result)
+
+    let plainResult = format(message, {
       myname: myName,
       firstname: name
-    }))
-  }, [myName, name, number]);
+    });
+    setPlainComposedMessage(plainResult)
+  }, [myName, name]);
 
-  let smsto = `smsto:${number}:${composedMessage}`
+  let smsto = `smsto:${number}:${plainComposedMessage}`
 
   const nameNumberChanged = (event) => {
-    setNameNumber(event.target.value)
+    var outName = '';
+    var outNum = '';
+
     let [rawName, rawNum] = event.target.value.split('\t')
-    
+    setNameNumber(event.target.value)
+
     if (rawName && rawName.length > 2) {
       if (rawName.indexOf(' ') >= 0) {
         let [rawFirst, _] = rawName.split(' ');
-        setName(rawFirst)
+        outName = rawFirst
       } else {
-        setName(rawName)
+        outName = rawName
       }
     }
     if (rawNum && rawNum.length == 12) {
-      setNumber(rawNum)
+      outNum = rawNum
     }
+
+    setNumber(outNum);
+    setName(outName);
   }
 
   const myNameChanged = (event) => {
@@ -67,7 +83,6 @@ export default function Index() {
   }
 
   const messageChanged = (event) => {
-    // console.log(`changed message to: ${event.target.value}`)
     setMessage(event.target.value)
   }
 
@@ -75,6 +90,8 @@ export default function Index() {
   if (myName && name && number && composedMessage) {
     validSVG = true;
   }
+
+  let fakeQRCode = "https://apple.com";
 
   return (
     <Container maxWidth="lg">
@@ -95,7 +112,7 @@ export default function Index() {
               <CancelIcon fontSize="inherit" />
             </IconButton>
           </Box>
-          <Box sx={{ my: 4, width: '400px', display: 'flex' }}>
+          <Box sx={{ mt: 4, width: '400px', display: 'flex' }}>
             <Box sx={{ width: '370px' }}>
               <TextField
                 value={nameNumber}
@@ -109,6 +126,7 @@ export default function Index() {
               <CancelIcon fontSize="inherit" />
             </IconButton>
           </Box>
+          (Separated by a tab character. Just paste in the two cells from Google Sheets.)
           <Box sx={{ my: 4, width: '400px' }}>
             <TextField
               id="text-message"
@@ -121,26 +139,34 @@ export default function Index() {
             />
           </Box>
           <Box sx={{ my: 4 }}>
-            Available tokens: <tt>{'{'}firstname{'}'}</tt>, <tt>{'{'}myname{'}'}</tt>
+            Available tokens: <Token><tt>{'{'}firstname{'}'}</tt></Token>, <Token><tt>{'{'}myname{'}'}</tt></Token>
           </Box>
         </Grid>
         <Grid size={4}>
           <Item>
             <Grid container spacing={1}>
-              <Grid size={3}>To:</Grid>
+              <Grid size={3} sx={{ textAlign: 'right', fontWeight: 'bold' }}>To:</Grid>
               <Grid size={8}>{number}</Grid>
-              <Grid size={3}>Message:</Grid>
+              <Grid size={3} sx={{ textAlign: 'right', fontWeight: 'bold' }}>Message:</Grid>
               <Grid size={8}>{composedMessage}</Grid>
             </Grid>
           </Item>
           <Box sx={{ my: 4 }}>
             <QRCodeSVG
-              value={smsto}
-              size={200}
+              value={validSVG ? smsto : fakeQRCode}
+              size={256}
               fgColor={validSVG ? "black" : "lightgray"} />
           </Box>
         </Grid>
       </Grid>
     </Container>
   );
+}
+
+function Token({ children }) {
+  return (
+    <Box component="span" sx={{ color: "orangered", fontWeight: "bold" }}>
+      {children}
+    </Box>
+  )
 }
