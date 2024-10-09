@@ -72,7 +72,7 @@ export default function Index() {
 
     let [rawName, rawNum] = nameNumber.split(splitChar)
 
-    if (rawName && rawName.length > 2) {
+    if (rawName && rawName.length >= 2) {
       if (rawName.indexOf(' ') >= 0) {
         let [rawFirst, _] = rawName.split(' ');
         outName = rawFirst
@@ -157,7 +157,7 @@ export default function Index() {
             Available tokens: <Token><tt>{'{'}firstname{'}'}</tt></Token>, <Token color="blue"><tt>{'{'}myname{'}'}</tt></Token>
           </Box>
         </Grid>
-        <Grid size={{ md: 4, sm: 6 }}>
+        <Grid size={{ md: 6, sm: 6 }}>
           <Item>
             <Grid container spacing={1}>
               <Grid size={3} sx={{ textAlign: 'right', fontWeight: 'bold' }}>To:</Grid>
