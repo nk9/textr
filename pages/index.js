@@ -64,8 +64,13 @@ export default function Index() {
   useEffect(() => {
     var outName = undefined;
     var outNum = undefined;
+    var splitChar = '\t';
 
-    let [rawName, rawNum] = nameNumber.split('\t')
+    if (nameNumber.indexOf(';') >= 0) {
+      splitChar = ';';
+    }
+
+    let [rawName, rawNum] = nameNumber.split(splitChar)
 
     if (rawName && rawName.length > 2) {
       if (rawName.indexOf(' ') >= 0) {
@@ -75,8 +80,9 @@ export default function Index() {
         outName = rawName
       }
     }
-    if (rawNum && rawNum.length == 12) {
-      outNum = rawNum
+    if (rawNum && rawNum.length >= 10) {
+      let stripped = rawNum.replace(/\D/g, '');
+      outNum = `${stripped.slice(0, 3)}-${stripped.slice(3, 6)}-${stripped.slice(6)}`
     }
 
     setNumber(outNum);
@@ -135,7 +141,7 @@ export default function Index() {
               <CancelIcon fontSize="inherit" />
             </IconButton>
           </Box>
-          (Separated by a tab character. Just paste in the two cells from Google Sheets.)
+          (Separated by tab or semicolon. You can paste in the two cells from Google Sheets.)
           <Box sx={{ my: 4, maxwidth: '350px' }}>
             <TextField
               id="text-message"
