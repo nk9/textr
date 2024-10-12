@@ -166,7 +166,7 @@ export default function Index() {
               <Grid size={8}>{composedMessage}</Grid>
             </Grid>
           </Item>
-          <Box sx={{ my: 4 }}>
+          <Box sx={{ my: 4, display: "flex", justifyContent: "center" }}>
             <QRCodeSVG
               value={validSVG ? smsto : fakeQRCode}
               size={256}
