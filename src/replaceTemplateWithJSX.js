@@ -1,7 +1,9 @@
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import React from "react";
+import Link from '/src/Link';
 
 export default function replaceTemplateWithJSX(template, replacements) {
-  const regex = /\{(\w+)\}/g;
+  const regex = /\{(\w+)\}|(https[:\/a-zA-Z%~0-9-\.]+)/g;
   let result = [];
   let lastIndex = 0;
   let match;
@@ -9,7 +11,13 @@ export default function replaceTemplateWithJSX(template, replacements) {
   while ((match = regex.exec(template)) !== null) {
     const placeholder = match[0];
     const key = match[1];
-    const replacement = replacements[key];
+    var replacement = undefined;
+
+    if (key in replacements) {
+      replacement = replacements[key];
+    } else if (placeholder.startsWith("https://")) {
+      replacement = <><Link href={placeholder} target="_blank">{placeholder}<OpenInNewIcon sx={{ fontSize: "14px", verticalAlign: "middle", marginLeft: "2px" }} /></Link></>;
+    }
 
     // Add string before the placeholder
     if (match.index > lastIndex) {
