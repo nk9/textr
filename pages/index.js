@@ -111,7 +111,7 @@ export default function Index() {
   let fakeQRCode = "https://apple.com";
   let smsURL = `sms://${number};?&body=${encodeURIComponent(plainComposedMessage)}`;
   let instructions = (<>
-    <Box sx={{ mb: 3 }}><PhotoCameraIcon fontSize='small' sx={{ verticalAlign: "middle", mr: 1 }} />Scan below or <Link href={smsURL}>click here</Link></Box>
+    <Box sx={{ mb: 3 }}><PhotoCameraIcon fontSize='small' sx={{ verticalAlign: "middle", mr: 1 }} />Scan below, or use <Link href={smsURL}>this link</Link> on mobile</Box>
   </>);
 
   return (
