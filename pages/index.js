@@ -6,7 +6,6 @@ import IconButton from '@mui/material/IconButton';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
 import { getCookie, getCookies, setCookie } from 'cookies-next';
 import { QRCodeSVG } from 'qrcode.react';
 import { useEffect, useState } from 'react';
