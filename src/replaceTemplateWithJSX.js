@@ -13,7 +13,7 @@ export default function replaceTemplateWithJSX(template, replacements) {
     const key = match[1];
     var replacement = undefined;
 
-    if (key in replacements) {
+    if (replacements.hasOwnProperty(key)) {
       replacement = replacements[key];
     } else if (placeholder.startsWith("https://")) {
       replacement = <><Link href={placeholder} target="_blank">{placeholder}<OpenInNewIcon sx={{ fontSize: "14px", verticalAlign: "middle", marginLeft: "2px" }} /></Link></>;
