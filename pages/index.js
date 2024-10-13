@@ -11,6 +11,7 @@ import { getCookie, getCookies, setCookie } from 'cookies-next';
 import { QRCodeSVG } from 'qrcode.react';
 import { useEffect, useState } from 'react';
 import format from 'string-template';
+import AppBar from '/src/AppBar';
 import replaceTemplateWithJSX from '/src/replaceTemplateWithJSX';
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -109,72 +110,71 @@ export default function Index() {
   let fakeQRCode = "https://apple.com";
 
   return (
-    <Container maxWidth="md">
-      <Typography variant="h4" component="h1" sx={{ mb: 2 }}>
-        Textr
-      </Typography>
-
-      <Grid container spacing={{ md: 4, sm: 3 }}>
-        <Grid size={6}>
-          <Box>
-            <TextField
-              value={myName}
-              placeholder="My Name"
-              variant="outlined"
-              autoFocus
-              onChange={(e) => setMyName(e.target.value)} />
-            <IconButton aria-label="delete" size="large" onClick={() => setMyName('')}>
-              <CancelIcon fontSize="inherit" />
-            </IconButton>
-          </Box>
-          <Box sx={{ mt: 4, maxwidth: '350px', display: 'flex' }}>
-            <Box sx={{ width: '370px' }}>
+    <>
+      <AppBar />
+      <Container maxWidth="md">
+        <Grid container spacing={{ md: 4, sm: 3 }}>
+          <Grid size={6}>
+            <Box>
               <TextField
-                value={nameNumber}
-                label="Their name & cell number"
+                value={myName}
+                placeholder="My Name"
                 variant="outlined"
-                fullWidth
                 autoFocus
-                onChange={(e) => setNameNumber(e.target.value)} />
+                onChange={(e) => setMyName(e.target.value)} />
+              <IconButton aria-label="delete" size="large" onClick={() => setMyName('')}>
+                <CancelIcon fontSize="inherit" />
+              </IconButton>
             </Box>
-            <IconButton aria-label="delete" size="large" onClick={() => setNameNumber('')}>
-              <CancelIcon fontSize="inherit" />
-            </IconButton>
-          </Box>
-          (Separated by tab or semicolon. You can paste in the two cells from Google Sheets.)
-          <Box sx={{ my: 4, maxwidth: '350px' }}>
-            <TextField
-              id="text-message"
-              label="Text message"
-              multiline
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              rows={6}
-              fullWidth
-            />
-          </Box>
-          <Box sx={{ my: 4 }}>
-            Available tokens: <Token><tt>{'{'}firstname{'}'}</tt></Token>, <Token color="blue"><tt>{'{'}myname{'}'}</tt></Token>
-          </Box>
+            <Box sx={{ mt: 4, maxwidth: '350px', display: 'flex' }}>
+              <Box sx={{ width: '370px' }}>
+                <TextField
+                  value={nameNumber}
+                  label="Their name & cell number"
+                  variant="outlined"
+                  fullWidth
+                  autoFocus
+                  onChange={(e) => setNameNumber(e.target.value)} />
+              </Box>
+              <IconButton aria-label="delete" size="large" onClick={() => setNameNumber('')}>
+                <CancelIcon fontSize="inherit" />
+              </IconButton>
+            </Box>
+            (Separated by tab or semicolon. You can paste in the two cells from Google Sheets.)
+            <Box sx={{ my: 4, maxwidth: '350px' }}>
+              <TextField
+                id="text-message"
+                label="Text message"
+                multiline
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                rows={6}
+                fullWidth
+              />
+            </Box>
+            <Box sx={{ my: 4 }}>
+              Available tokens: <Token><tt>{'{'}firstname{'}'}</tt></Token>, <Token color="blue"><tt>{'{'}myname{'}'}</tt></Token>
+            </Box>
+          </Grid>
+          <Grid size={{ md: 6, sm: 6 }}>
+            <Item>
+              <Grid container spacing={1}>
+                <Grid size={3} sx={{ textAlign: 'right', fontWeight: 'bold' }}>To:</Grid>
+                <Grid size={8}>{number}</Grid>
+                <Grid size={3} sx={{ textAlign: 'right', fontWeight: 'bold' }}>Message:</Grid>
+                <Grid size={8}>{composedMessage}</Grid>
+              </Grid>
+            </Item>
+            <Box sx={{ my: 4, display: "flex", justifyContent: "center" }}>
+              <QRCodeSVG
+                value={validSVG ? smsto : fakeQRCode}
+                size={256}
+                fgColor={validSVG ? "black" : "lightgray"} />
+            </Box>
+          </Grid>
         </Grid>
-        <Grid size={{ md: 6, sm: 6 }}>
-          <Item>
-            <Grid container spacing={1}>
-              <Grid size={3} sx={{ textAlign: 'right', fontWeight: 'bold' }}>To:</Grid>
-              <Grid size={8}>{number}</Grid>
-              <Grid size={3} sx={{ textAlign: 'right', fontWeight: 'bold' }}>Message:</Grid>
-              <Grid size={8}>{composedMessage}</Grid>
-            </Grid>
-          </Item>
-          <Box sx={{ my: 4, display: "flex", justifyContent: "center" }}>
-            <QRCodeSVG
-              value={validSVG ? smsto : fakeQRCode}
-              size={256}
-              fgColor={validSVG ? "black" : "lightgray"} />
-          </Box>
-        </Grid>
-      </Grid>
-    </Container>
+      </Container>
+    </>
   );
 }
 
