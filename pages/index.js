@@ -1,4 +1,5 @@
 import CancelIcon from '@mui/icons-material/Cancel';
+import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid2';
@@ -7,6 +8,7 @@ import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import { getCookie, getCookies, setCookie } from 'cookies-next';
+import Link from 'next/link';
 import { QRCodeSVG } from 'qrcode.react';
 import { useEffect, useState } from 'react';
 import format from 'string-template';
@@ -107,6 +109,10 @@ export default function Index() {
   }
 
   let fakeQRCode = "https://apple.com";
+  let smsURL = `sms://${number};?&body=${encodeURIComponent(plainComposedMessage)}`;
+  let instructions = (<>
+    <Box sx={{ mb: 3 }}><PhotoCameraIcon fontSize='small' sx={{ verticalAlign: "middle", mr: 1 }} />Scan below or <Link href={smsURL}>click here</Link></Box>
+  </>);
 
   return (
     <>
@@ -164,11 +170,14 @@ export default function Index() {
                 <Grid size={8}>{composedMessage}</Grid>
               </Grid>
             </Item>
-            <Box sx={{ my: 4, display: "flex", justifyContent: "center" }}>
-              <QRCodeSVG
-                value={validSVG ? smsto : fakeQRCode}
-                size={256}
-                fgColor={validSVG ? "black" : "lightgray"} />
+            <Box sx={{ my: 4, display: "flex", justifyContent: "center", flexWrap: "wrap" }}>
+              {validSVG ? instructions : ''}
+              <Box>
+                <QRCodeSVG
+                  value={validSVG ? smsto : fakeQRCode}
+                  size={256}
+                  fgColor={validSVG ? "black" : "lightgray"} />
+              </Box>
             </Box>
           </Grid>
         </Grid>
