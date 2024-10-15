@@ -123,9 +123,9 @@ export default function Index() {
             <Box>
               <TextField
                 value={myName}
-                placeholder="My Name"
+                label="My Name"
                 variant="outlined"
-                autoFocus
+                InputLabelProps={{ shrink: true }}
                 onChange={(e) => setMyName(e.target.value)} />
               <IconButton aria-label="delete" size="large" onClick={() => setMyName('')}>
                 <CancelIcon fontSize="inherit" />
