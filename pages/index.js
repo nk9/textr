@@ -175,10 +175,10 @@ export default function Index() {
           <Grid size={{ md: 6, sm: 6 }}>
             <Item>
               <Grid container spacing={1}>
-                <Grid size={3} sx={{ textAlign: 'right', fontWeight: 'bold' }}>To:</Grid>
-                <Grid size={8}>{number}</Grid>
-                <Grid size={3} sx={{ textAlign: 'right', fontWeight: 'bold' }}>Message:</Grid>
-                <Grid size={8}>{composedMessage}</Grid>
+                <Grid size={2} sx={{ textAlign: 'right', fontWeight: 'bold' }}>To:</Grid>
+                <Grid size={10}>{number}</Grid>
+                <Grid size={2} sx={{ textAlign: 'right', fontWeight: 'bold' }}>Message:</Grid>
+                <Grid size={10}>{composedMessage}</Grid>
               </Grid>
             </Item>
             <Box sx={{ my: 4, display: "flex", justifyContent: "center", flexWrap: "wrap" }}>
