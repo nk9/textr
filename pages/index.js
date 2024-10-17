@@ -1,5 +1,6 @@
 import CancelIcon from '@mui/icons-material/Cancel';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
+import { Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid2';
@@ -183,11 +184,12 @@ export default function Index() {
             </Item>
             <Box sx={{ my: 4, display: "flex", justifyContent: "center", flexWrap: "wrap" }}>
               {validSVG ? instructions : ''}
-              <Box>
+              <Box sx={{ position: 'relative' }}>
                 <QRCodeSVG
                   value={validSVG ? smsto : fakeQRCode}
                   size={256}
                   fgColor={validSVG ? "black" : "lightgray"} />
+                {!validSVG ? <Typography sx={{ position: 'absolute', top: '50px', left: '0', zIndex: '2', fontWeight: 'bold', color: 'blue', fontSize: '40pt', WebkitTextStrokeColor: "white", WebkitTextStrokeWidth: "2px", textAlign: 'center' }}>Fill in all fields</Typography> : ''}
               </Box>
             </Box>
           </Grid>
