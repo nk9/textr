@@ -10,7 +10,7 @@ import TextField from '@mui/material/TextField';
 import { getCookie, getCookies, setCookie } from 'cookies-next';
 import Link from 'next/link';
 import { QRCodeSVG } from 'qrcode.react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import format from 'string-template';
 import AppBar from '/src/AppBar';
 import replaceTemplateWithJSX from '/src/replaceTemplateWithJSX';
@@ -38,14 +38,24 @@ export default function Index() {
   let myNameCookie = getCookie(MY_NAME_COOKIE) || '';
   let messageCookie = getCookie(MESSAGE_COOKIE) || defaultMessage;
 
+  const [myName, setMyName] = useState(myNameCookie)
   const [nameNumber, setNameNumber] = useState('')
   const [message, setMessage] = useState(messageCookie)
-  const [myName, setMyName] = useState(myNameCookie)
   const [name, setName] = useState('')
   const [number, setNumber] = useState('')
   const [composedMessage, setComposedMessage] = useState('');
   const [plainComposedMessage, setPlainComposedMessage] = useState('');
 
+  const myNameRef = useRef(null);
+  const nameNumberRef = useRef(null);
+
+  useEffect(() => {
+    if (myName.length > 0) {
+      nameNumberRef.current.focus();
+    } else {
+      myNameRef.current.focus();
+    }
+  }, []);
 
   useEffect(() => {
     let result = replaceTemplateWithJSX(message, {
@@ -123,6 +133,7 @@ export default function Index() {
             <Box>
               <TextField
                 value={myName}
+                inputRef={myNameRef}
                 label="My Name"
                 variant="outlined"
                 InputLabelProps={{ shrink: true }}
@@ -135,10 +146,10 @@ export default function Index() {
               <Box sx={{ width: '370px' }}>
                 <TextField
                   value={nameNumber}
+                  inputRef={nameNumberRef}
                   label="Their name & cell number"
                   variant="outlined"
                   fullWidth
-                  autoFocus
                   onChange={(e) => setNameNumber(e.target.value)} />
               </Box>
               <IconButton aria-label="delete" size="large" onClick={() => setNameNumber('')}>
@@ -148,10 +159,10 @@ export default function Index() {
             (Separated by tab or semicolon. You can paste in the two cells from Google Sheets.)
             <Box sx={{ my: 4, maxwidth: '350px' }}>
               <TextField
+                value={message}
                 id="text-message"
                 label="Text message"
                 multiline
-                value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 rows={6}
                 fullWidth
