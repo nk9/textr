@@ -33,22 +33,20 @@ let MY_NAME_COOKIE = 'MY_NAME_COOKIE';
 let MESSAGE_COOKIE = 'MESSAGE_COOKIE';
 
 export const getServerSideProps = ({ req, res }) => {
-  const myNameCookie = getCookie(MY_NAME_COOKIE, { req, res }) || '';
-
-  return { props: { initialMyName: myNameCookie } };
-};
-
-export default function Index({ initialMyName }) {
   var defaultMessage = "Hi {firstname}, this is {myname} from the Michigan ONE Campaign. " +
     "I just wanted to confirm that you'll be canvassing with us today at 3pm. " +
     "Please let me know!";
 
-  getCookies();
-  let messageCookie = getCookie(MESSAGE_COOKIE) || defaultMessage;
+  const initialMyName = getCookie(MY_NAME_COOKIE, { req, res }) || '';
+  const initialMessage = getCookie(MESSAGE_COOKIE, { req, res }) || defaultMessage;
 
+  return { props: { initialMyName, initialMessage } };
+};
+
+export default function Index({ initialMyName, initialMessage }) {
   const [myName, setMyName] = useState(initialMyName)
   const [nameNumber, setNameNumber] = useState('')
-  const [message, setMessage] = useState(messageCookie)
+  const [message, setMessage] = useState(initialMessage)
   const [name, setName] = useState('')
   const [number, setNumber] = useState('')
   const [composedMessage, setComposedMessage] = useState('');
@@ -68,7 +66,6 @@ export default function Index({ initialMyName }) {
     }
   }, []);
 
-
   const [anchorEl, setAnchorEl] = useState(null);
 
   // Sync the state of anchorEl with the ref
@@ -76,7 +73,7 @@ export default function Index({ initialMyName }) {
     anchorRef.current = anchorEl;
   }, [anchorEl]);
 
-  const handlePopoverOpen = (event) => {
+  const handlePopoverOpen = () => {
     let icon = document.getElementById('bigNumberIcon');
     setAnchorEl(icon);
   };
@@ -88,7 +85,6 @@ export default function Index({ initialMyName }) {
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.ctrlKey && event.key === 'z') {
-        console.log(anchorRef.current);
         if (!anchorRef.current) {
           handlePopoverOpen();
         } else {
@@ -106,6 +102,9 @@ export default function Index({ initialMyName }) {
     };
   }, []);
 
+
+  //
+  // Create plain and rich versions of composed message
   useEffect(() => {
     let result = replaceTemplateWithJSX(message, {
       myname: <Token key="myname" color='blue'>{myName}</Token>,
