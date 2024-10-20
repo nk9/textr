@@ -32,20 +32,21 @@ const Item = styled(Paper)(({ theme }) => ({
 let MY_NAME_COOKIE = 'MY_NAME_COOKIE';
 let MESSAGE_COOKIE = 'MESSAGE_COOKIE';
 
-export const getServerSideProps = ({ req, res }) => {
+export const getServerSideProps = ({ req, res, query }) => {
   var defaultMessage = "Hi {firstname}, this is {myname} from the Michigan ONE Campaign. " +
     "I just wanted to confirm that you'll be canvassing with us today at 3pm. " +
     "Please let me know!";
 
   const initialMyName = getCookie(MY_NAME_COOKIE, { req, res }) || '';
   const initialMessage = getCookie(MESSAGE_COOKIE, { req, res }) || defaultMessage;
+  const initialNameNumber = query.to || '';
 
-  return { props: { initialMyName, initialMessage } };
+  return { props: { initialMyName, initialMessage, initialNameNumber } };
 };
 
-export default function Index({ initialMyName, initialMessage }) {
+export default function Index({ initialMyName, initialMessage, initialNameNumber }) {
   const [myName, setMyName] = useState(initialMyName)
-  const [nameNumber, setNameNumber] = useState('')
+  const [nameNumber, setNameNumber] = useState(initialNameNumber)
   const [message, setMessage] = useState(initialMessage)
   const [name, setName] = useState('')
   const [number, setNumber] = useState('')
@@ -61,6 +62,7 @@ export default function Index({ initialMyName, initialMessage }) {
     if (myName.length > 0) {
       setShrinkName(true);
       nameNumberRef.current.focus();
+      nameNumberRef.current.setSelectionRange(nameNumber.length, nameNumber.length);
     } else {
       myNameRef.current.focus();
     }
@@ -172,7 +174,6 @@ export default function Index({ initialMyName, initialMessage }) {
   let instructions = (<>
     <Box sx={{ mb: 3 }}><PhotoCameraIcon fontSize='small' sx={{ verticalAlign: "middle", mr: 1 }} />Scan below, or use <Link href={smsURL}>this link</Link> on mobile</Box>
   </>);
-
 
   const open = Boolean(anchorEl);
   const qrcodeIcon = (<QrCodeIcon
