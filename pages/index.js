@@ -46,12 +46,14 @@ export default function Index() {
   const [number, setNumber] = useState('')
   const [composedMessage, setComposedMessage] = useState('');
   const [plainComposedMessage, setPlainComposedMessage] = useState('');
+  const [shrinkName, setShrinkName] = useState(false);
 
   const myNameRef = useRef(null);
   const nameNumberRef = useRef(null);
 
   useEffect(() => {
     if (myName.length > 0) {
+      setShrinkName(true);
       nameNumberRef.current.focus();
     } else {
       myNameRef.current.focus();
@@ -104,6 +106,7 @@ export default function Index() {
 
   useEffect(() => {
     setCookie(MY_NAME_COOKIE, myName, { sameSite: true })
+    setShrinkName(myName.length > 0);
   }, [myName])
 
   useEffect(() => {
@@ -137,7 +140,7 @@ export default function Index() {
                 inputRef={myNameRef}
                 label="My Name"
                 variant="outlined"
-                InputLabelProps={{ shrink: true }}
+                InputLabelProps={{ shrink: shrinkName }}
                 onChange={(e) => setMyName(e.target.value)} />
               <IconButton aria-label="delete" size="large" onClick={() => setMyName('')}>
                 <CancelIcon fontSize="inherit" />
