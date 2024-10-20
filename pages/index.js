@@ -1,11 +1,13 @@
 import CancelIcon from '@mui/icons-material/Cancel';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
+import QrCodeIcon from '@mui/icons-material/QrCode';
 import { Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid2';
 import IconButton from '@mui/material/IconButton';
 import Paper from '@mui/material/Paper';
+import Popover from '@mui/material/Popover';
 import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import { getCookie, getCookies, setCookie } from 'cookies-next';
@@ -50,6 +52,7 @@ export default function Index() {
 
   const myNameRef = useRef(null);
   const nameNumberRef = useRef(null);
+  const anchorRef = useRef(null);
 
   useEffect(() => {
     if (myName.length > 0) {
@@ -58,6 +61,44 @@ export default function Index() {
     } else {
       myNameRef.current.focus();
     }
+  }, []);
+
+
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  // Sync the state of anchorEl with the ref
+  useEffect(() => {
+    anchorRef.current = anchorEl;
+  }, [anchorEl]);
+
+  const handlePopoverOpen = (event) => {
+    let icon = document.getElementById('bigNumberIcon');
+    setAnchorEl(icon);
+  };
+
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.ctrlKey && event.key === 'z') {
+        console.log(anchorRef.current);
+        if (!anchorRef.current) {
+          handlePopoverOpen();
+        } else {
+          handlePopoverClose();
+        }
+      }
+    };
+
+    // Add event listener for keydown
+    window.addEventListener('keydown', handleKeyDown);
+
+    // Clean up event listener on component unmount
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
   }, []);
 
   useEffect(() => {
@@ -128,6 +169,16 @@ export default function Index() {
     <Box sx={{ mb: 3 }}><PhotoCameraIcon fontSize='small' sx={{ verticalAlign: "middle", mr: 1 }} />Scan below, or use <Link href={smsURL}>this link</Link> on mobile</Box>
   </>);
 
+
+  const open = Boolean(anchorEl);
+  const qrcodeIcon = (<QrCodeIcon
+    id="bigNumberIcon"
+    aria-owns={open ? 'big-number-popover' : undefined}
+    aria-haspopup="true"
+    onMouseEnter={handlePopoverOpen}
+    onMouseLeave={handlePopoverClose}
+    fontSize='inherit' />)
+
   return (
     <>
       <AppBar />
@@ -180,7 +231,7 @@ export default function Index() {
             <Item>
               <Grid container spacing={1}>
                 <Grid size={{ xs: 3, md: 2 }} sx={{ textAlign: 'right', fontWeight: 'bold' }}>To:</Grid>
-                <Grid size={{ xs: 9, md: 10 }}>{number}</Grid>
+                <Grid size={{ xs: 9, md: 10 }}>{number} {number && qrcodeIcon}</Grid>
                 <Grid size={{ xs: 3, md: 2 }} sx={{ textAlign: 'right', fontWeight: 'bold' }}>Message:</Grid>
                 <Grid size={{ xs: 9, md: 10 }}>{composedMessage}</Grid>
               </Grid>
@@ -198,6 +249,31 @@ export default function Index() {
           </Grid>
         </Grid>
       </Container>
+      <Popover
+        id="big-number-popover"
+        sx={{ pointerEvents: 'none' }}
+        open={open}
+        anchorEl={anchorEl}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'center',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
+        onClose={handlePopoverClose}
+        disableRestoreFocus
+      >
+        <Box sx={{ display: 'flex', justifyContent: 'center', p: 5, pb: 3, flexDirection: 'column' }}>
+          <QRCodeSVG
+            value={`tel:${number};`}
+            size={100}
+            fgColor='black'
+          />
+          <Typography sx={{ textAlign: "center", pt: 2 }}>ctrl+z</Typography>
+        </Box>
+      </Popover>
     </>
   );
 }
