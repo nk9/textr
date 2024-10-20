@@ -32,16 +32,21 @@ const Item = styled(Paper)(({ theme }) => ({
 let MY_NAME_COOKIE = 'MY_NAME_COOKIE';
 let MESSAGE_COOKIE = 'MESSAGE_COOKIE';
 
-export default function Index() {
+export const getServerSideProps = ({ req, res }) => {
+  const myNameCookie = getCookie(MY_NAME_COOKIE, { req, res }) || '';
+
+  return { props: { initialMyName: myNameCookie } };
+};
+
+export default function Index({ initialMyName }) {
   var defaultMessage = "Hi {firstname}, this is {myname} from the Michigan ONE Campaign. " +
     "I just wanted to confirm that you'll be canvassing with us today at 3pm. " +
     "Please let me know!";
 
   getCookies();
-  let myNameCookie = getCookie(MY_NAME_COOKIE) || '';
   let messageCookie = getCookie(MESSAGE_COOKIE) || defaultMessage;
 
-  const [myName, setMyName] = useState(myNameCookie)
+  const [myName, setMyName] = useState(initialMyName)
   const [nameNumber, setNameNumber] = useState('')
   const [message, setMessage] = useState(messageCookie)
   const [name, setName] = useState('')
