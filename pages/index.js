@@ -152,12 +152,12 @@ export default function Index({ initialMyName, initialMessage, initialNameNumber
   }, [nameNumber])
 
   useEffect(() => {
-    setCookie(MY_NAME_COOKIE, myName, { sameSite: true })
+    setCookie(MY_NAME_COOKIE, myName, { sameSite: "lax", secure: true })
     setShrinkName(myName.length > 0);
   }, [myName])
 
   useEffect(() => {
-    setCookie(MESSAGE_COOKIE, message, { sameSite: true })
+    setCookie(MESSAGE_COOKIE, message, { sameSite: "lax", secure: true })
   }, [message])
 
   const messageChanged = (event) => {
