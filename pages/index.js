@@ -58,6 +58,8 @@ export default function Index({ initialMyName, initialMessage, initialNameNumber
   const nameNumberRef = useRef(null);
   const anchorRef = useRef(null);
 
+  const ENVIRONMENT = process.env.NODE_ENV || "development";
+
   useEffect(() => {
     if (myName.length > 0) {
       setShrinkName(true);
@@ -152,12 +154,18 @@ export default function Index({ initialMyName, initialMessage, initialNameNumber
   }, [nameNumber])
 
   useEffect(() => {
-    setCookie(MY_NAME_COOKIE, myName, { sameSite: "none" })
+    setCookie(MY_NAME_COOKIE, myName, {
+      secure: ENVIRONMENT === "production",
+      sameSite: ENVIRONMENT === "production" ? "none" : "lax"
+    })
     setShrinkName(myName.length > 0);
   }, [myName])
 
   useEffect(() => {
-    setCookie(MESSAGE_COOKIE, message, { sameSite: "none" })
+    setCookie(MESSAGE_COOKIE, message, { 
+      secure: ENVIRONMENT === "production",
+      sameSite: ENVIRONMENT === "production" ? "none" : "lax"
+    })
   }, [message])
 
   const messageChanged = (event) => {
