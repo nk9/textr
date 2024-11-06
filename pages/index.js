@@ -217,7 +217,7 @@ export default function Index({ initialMyName, initialMessage, initialNameNumber
   return (
     <>
       <AppBar />
-      <Container maxWidth="md">
+      <Container maxWidth="md" mb={3}>
         <Grid container spacing={{ md: 4, sm: 3 }}>
           <Grid size={6}>
             <Box>
@@ -283,14 +283,14 @@ export default function Index({ initialMyName, initialMessage, initialNameNumber
             </Box>
           </Grid>
         </Grid>
-        <Container sx={{ display: "flex" }}>
+        <Container sx={{ display: "flex", justifyContent: "center" }}>
           <Grid container maxWidth="400px" columnSpacing={1} rowSpacing={2} sx={{ position: "relative" }}>
             <Grid size={12} sx={{ fontSize: "16pt", fontweight: "600", textAlign: "center", borderBottom: "solid 2px", borderBottomColor: "primary.main" }}>Shortcuts</Grid>
             <Grid size={{ xs: 6, md: 5 }} sx={{ textAlign: "right", verticalAlign: "baseline" }} pt={1}>send SMS:</Grid>
             <Grid size={{ xs: 6, md: 5 }} pt={1}><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>S</Kbd></Grid>
             <Grid size={{ xs: 6, md: 5 }} sx={{ textAlign: "right" }}>copy message:</Grid>
             <Grid size={{ xs: 6, md: 5 }}><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>C</Kbd></Grid>
-            <Grid size={{ xs: 6, md: 5 }} sx={{ textAlign: "right" }}>show phone QR code:</Grid>
+            <Grid size={{ xs: 6, md: 5 }} sx={{ textAlign: "right" }}>show QR code:</Grid>
             <Grid size={{ xs: 6, md: 5 }}><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>Q</Kbd></Grid>
           </Grid>
         </Container>
