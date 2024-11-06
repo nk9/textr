@@ -251,7 +251,7 @@ export default function Index({ initialMyName, initialMessage, initialNameNumber
               <TextField
                 value={message}
                 id="text-message"
-                label="Text message"
+                label="Text message template"
                 multiline
                 onChange={(e) => setMessage(e.target.value)}
                 rows={6}
