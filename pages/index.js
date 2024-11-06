@@ -15,8 +15,13 @@ import Link from 'next/link';
 import { QRCodeSVG } from 'qrcode.react';
 import { useEffect, useRef, useState } from 'react';
 import format from 'string-template';
+import styles from './index.module.scss';
 import AppBar from '/src/AppBar';
 import replaceTemplateWithJSX from '/src/replaceTemplateWithJSX';
+
+const Kbd = ({ children }) => {
+  return <Box component="span" className={styles.kbd}>{children}</Box>
+}
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: '#fff',
@@ -28,6 +33,14 @@ const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: '#1A2027',
   }),
 }));
+
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    console.log("Text copied to clipboard");
+  }).catch((err) => {
+    console.error("Failed to copy text: ", err);
+  });
+}
 
 let MY_NAME_COOKIE = 'MY_NAME_COOKIE';
 let MESSAGE_COOKIE = 'MESSAGE_COOKIE';
@@ -88,11 +101,20 @@ export default function Index({ initialMyName, initialMessage, initialNameNumber
 
   useEffect(() => {
     const handleKeyDown = (event) => {
-      if (event.ctrlKey && event.key === 'z') {
-        if (!anchorRef.current) {
-          handlePopoverOpen();
-        } else {
-          handlePopoverClose();
+      if (validSVG) {
+        if (event.ctrlKey && event.shiftKey && event.code === 'KeyQ') {
+          if (!anchorRef.current) {
+            handlePopoverOpen();
+          } else {
+            handlePopoverClose();
+          }
+        }
+        else if (event.ctrlKey && event.shiftKey && event.code === 'KeyC') {
+          copyToClipboard(plainComposedMessage);
+        }
+        else if (event.ctrlKey && event.shiftKey && event.code === 'KeyS') {
+          let link = document.getElementById("smsLink");
+          link.click();
         }
       }
     };
@@ -180,7 +202,7 @@ export default function Index({ initialMyName, initialMessage, initialNameNumber
   let fakeQRCode = "https://apple.com";
   let smsURL = `sms://${number};?&body=${encodeURIComponent(plainComposedMessage)}`;
   let instructions = (<>
-    <Box sx={{ mb: 3 }}><PhotoCameraIcon fontSize='small' sx={{ verticalAlign: "middle", mr: 1 }} />Scan below, or use <Link href={smsURL}>this link</Link> on mobile</Box>
+    <Box sx={{ mb: 3 }}><PhotoCameraIcon fontSize='small' sx={{ verticalAlign: "middle", mr: 1 }} />Scan below, or <Link id="smsLink" href={smsURL}>directly send a text</Link></Box>
   </>);
 
   const open = Boolean(anchorEl);
@@ -261,6 +283,17 @@ export default function Index({ initialMyName, initialMessage, initialNameNumber
             </Box>
           </Grid>
         </Grid>
+        <Container sx={{ display: "flex" }}>
+          <Grid container maxWidth="400px" columnSpacing={1} rowSpacing={2} sx={{ position: "relative" }}>
+            <Grid size={12} sx={{ fontSize: "16pt", fontweight: "600", textAlign: "center", borderBottom: "solid 2px", borderBottomColor: "primary.main" }}>Shortcuts</Grid>
+            <Grid size={{ xs: 6, md: 5 }} sx={{ textAlign: "right", verticalAlign: "baseline" }} pt={1}>send SMS:</Grid>
+            <Grid size={{ xs: 6, md: 5 }} pt={1}><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>S</Kbd></Grid>
+            <Grid size={{ xs: 6, md: 5 }} sx={{ textAlign: "right" }}>copy message:</Grid>
+            <Grid size={{ xs: 6, md: 5 }}><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>C</Kbd></Grid>
+            <Grid size={{ xs: 6, md: 5 }} sx={{ textAlign: "right" }}>show phone QR code:</Grid>
+            <Grid size={{ xs: 6, md: 5 }}><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>Q</Kbd></Grid>
+          </Grid>
+        </Container>
       </Container>
       <Popover
         id="big-number-popover"
@@ -284,7 +317,7 @@ export default function Index({ initialMyName, initialMessage, initialNameNumber
             size={100}
             fgColor='black'
           />
-          <Typography sx={{ textAlign: "center", pt: 2 }}>ctrl+z</Typography>
+          <Typography sx={{ textAlign: "center", pt: 2 }}>ctrl+shift+q</Typography>
         </Box>
       </Popover>
     </>

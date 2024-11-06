@@ -23,6 +23,7 @@
     "qrcode.react": "^4.0.1",
     "react": "latest",
     "react-dom": "latest",
+    "sass": "^1.80.6",
     "string-template": "^1.0.0"
   },
   "devDependencies": {
