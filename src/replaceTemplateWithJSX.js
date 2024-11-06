@@ -18,7 +18,7 @@ export default function replaceTemplateWithJSX(template, replacements) {
     if (replacements.hasOwnProperty(key)) {
       replacement = <Typography component='span' key={i++}>{replacements[key]}</Typography>;
     } else if (placeholder.startsWith("https://")) {
-      replacement = <Link key={i++} href={placeholder} target="_blank">{placeholder}<OpenInNewIcon sx={{ fontSize: "14px", verticalAlign: "middle", marginLeft: "2px" }} /></Link>;
+      replacement = <Link key={i++} href={placeholder} target="_blank" sx={{ fontSize: "16px" }}>{placeholder}<OpenInNewIcon sx={{ fontSize: "14px", verticalAlign: "middle", marginLeft: "2px" }} /></Link>;
     }
 
     // Add string before the placeholder
