@@ -42,8 +42,8 @@ function copyToClipboard(text) {
   });
 }
 
-let MY_NAME_COOKIE = 'MY_NAME_COOKIE';
-let MESSAGE_COOKIE = 'MESSAGE_COOKIE';
+let MY_NAME_COOKIE = 'MY_NAME';
+let MESSAGE_TEMPLATE_COOKIE = 'MESSAGE_TEMPLATE';
 
 export const getServerSideProps = ({ req, res, query }) => {
   var defaultMessage = "Hi {firstname}, this is {myname} from the Michigan ONE Campaign. " +
@@ -51,7 +51,7 @@ export const getServerSideProps = ({ req, res, query }) => {
     "Please let me know!";
 
   const initialMyName = getCookie(MY_NAME_COOKIE, { req, res }) || '';
-  const initialMessage = getCookie(MESSAGE_COOKIE, { req, res }) || defaultMessage;
+  const initialMessage = getCookie(MESSAGE_TEMPLATE_COOKIE, { req, res }) || defaultMessage;
   const initialNameNumber = query.to || '';
 
   return { props: { initialMyName, initialMessage, initialNameNumber } };
@@ -208,7 +208,7 @@ export default function Index({ initialMyName, initialMessage, initialNameNumber
   }, [myName])
 
   useEffect(() => {
-    setCookie(MESSAGE_COOKIE, message, { 
+    setCookie(MESSAGE_TEMPLATE_COOKIE, message, { 
       secure: ENVIRONMENT === "production",
       sameSite: ENVIRONMENT === "production" ? "none" : "lax"
     })
