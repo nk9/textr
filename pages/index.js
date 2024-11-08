@@ -190,9 +190,13 @@ export default function Index({ initialMyName, initialMessage, initialNameNumber
         outName = rawName
       }
     }
+
     if (rawNum && rawNum.length >= 10) {
       let stripped = rawNum.replace(/\D/g, '');
-      outNum = `${stripped.slice(0, 3)}-${stripped.slice(3, 6)}-${stripped.slice(6)}`
+      
+      if (stripped.length >= 10) {
+        outNum = `${stripped.slice(0, 3)}-${stripped.slice(3, 6)}-${stripped.slice(6)}`
+      }
     }
 
     setNumber(outNum);
