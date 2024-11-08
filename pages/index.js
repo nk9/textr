@@ -66,6 +66,7 @@ export default function Index({ initialMyName, initialMessage, initialNameNumber
   const [composedMessage, setComposedMessage] = useState('');
   const [plainComposedMessage, setPlainComposedMessage] = useState('');
   const [shrinkName, setShrinkName] = useState(false);
+  const [isValidSVG, setIsValidSVG] = useState(false);
 
   const myNameRef = useRef(null);
   const nameNumberRef = useRef(null);
@@ -99,26 +100,44 @@ export default function Index({ initialMyName, initialMessage, initialNameNumber
     setAnchorEl(null);
   };
 
-  useEffect(() => {
-    const handleKeyDown = (event) => {
-      if (validSVG) {
-        if (event.ctrlKey && event.shiftKey && event.code === 'KeyQ') {
-          if (!anchorRef.current) {
-            handlePopoverOpen();
-          } else {
-            handlePopoverClose();
-          }
-        }
-        else if (event.ctrlKey && event.shiftKey && event.code === 'KeyC') {
-          copyToClipboard(plainComposedMessage);
-        }
-        else if (event.ctrlKey && event.shiftKey && event.code === 'KeyS') {
-          let link = document.getElementById("smsLink");
-          link.click();
+
+  //
+  // Set up keyboard shortcuts
+  const handleKeyDown = (event) => {
+    console.log("handleKeyDown:", event);
+    console.log("validSVG:", isValidSVG);
+    if (event.ctrlKey && event.shiftKey && event.code === 'KeyQ') {
+      event.preventDefault();
+      console.log("QR code");
+      if (isValidSVG) {
+        console.log("validSVG");
+        if (!anchorRef.current) {
+          handlePopoverOpen();
+        } else {
+          handlePopoverClose();
         }
       }
-    };
+    }
+    else if (event.ctrlKey && event.shiftKey && event.code === 'KeyC') {
+      event.preventDefault();
+      console.log("copy to clipboard");
+      if (isValidSVG) {
+        console.log("validSVG");
+        copyToClipboard(plainComposedMessage);
+      }
+    }
+    else if (event.ctrlKey && event.shiftKey && event.code === 'KeyS') {
+      event.preventDefault();
+      console.log("send SMS");
+      if (isValidSVG) {
+        console.log("validSVG");
+        let link = document.getElementById("smsLink");
+        link.click();
+      }
+    }
+  };
 
+  useEffect(() => {
     // Add event listener for keydown
     window.addEventListener('keydown', handleKeyDown);
 
@@ -144,6 +163,11 @@ export default function Index({ initialMyName, initialMessage, initialNameNumber
     });
     setPlainComposedMessage(plainResult)
   }, [myName, name, message]);
+
+  useEffect(() => {
+    let isValid = Boolean(myName && name && number && composedMessage);
+    setIsValidSVG(isValid);
+  }, [myName, name, number, composedMessage]);
 
   let smsto = `smsto:${number}:${plainComposedMessage}`
 
@@ -192,11 +216,6 @@ export default function Index({ initialMyName, initialMessage, initialNameNumber
 
   const messageChanged = (event) => {
     setMessage(event.target.value)
-  }
-
-  let validSVG = false;
-  if (myName && name && number && composedMessage) {
-    validSVG = true;
   }
 
   let fakeQRCode = "https://apple.com";
@@ -272,13 +291,13 @@ export default function Index({ initialMyName, initialMessage, initialNameNumber
               </Grid>
             </Item>
             <Box sx={{ my: 4, display: "flex", justifyContent: "center", flexWrap: "wrap" }}>
-              {validSVG ? instructions : ''}
+              {isValidSVG ? instructions : ''}
               <Box sx={{ position: 'relative' }}>
                 <QRCodeSVG
-                  value={validSVG ? smsto : fakeQRCode}
+                  value={isValidSVG ? smsto : fakeQRCode}
                   size={256}
-                  fgColor={validSVG ? "black" : "lightgray"} />
-                {!validSVG ? <Typography sx={{ position: 'absolute', top: '50px', left: '0', zIndex: '2', fontWeight: 'bold', color: 'blue', fontSize: '40pt', WebkitTextStrokeColor: "white", WebkitTextStrokeWidth: "2px", textAlign: 'center' }}>Fill in all fields</Typography> : ''}
+                  fgColor={isValidSVG ? "black" : "lightgray"} />
+                {!isValidSVG ? <Typography sx={{ position: 'absolute', top: '50px', left: '0', zIndex: '2', fontWeight: 'bold', color: 'blue', fontSize: '40pt', WebkitTextStrokeColor: "white", WebkitTextStrokeWidth: "2px", textAlign: 'center' }}>Fill in all fields</Typography> : ''}
               </Box>
             </Box>
           </Grid>
