@@ -145,7 +145,7 @@ export default function Index({ initialMyName, initialMessage, initialNameNumber
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);
+  }, [isValidSVG, plainComposedMessage]);
 
 
   //
