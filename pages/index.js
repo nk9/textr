@@ -46,7 +46,7 @@ let MY_NAME_COOKIE = 'MY_NAME';
 let MESSAGE_TEMPLATE_COOKIE = 'MESSAGE_TEMPLATE';
 
 export const getServerSideProps = ({ req, res, query }) => {
-  var defaultMessage = "Hi {firstname}, this is {myname} from the Michigan ONE Campaign. " +
+  var defaultMessage = "Hi {firstname}, this is {myname} from One Team Michigan. " +
     "I just wanted to confirm that you'll be canvassing with us today at 3pm. " +
     "Please let me know!";
 
