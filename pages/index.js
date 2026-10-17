@@ -106,7 +106,7 @@ export default function Index({ initialMyName, initialMessage, initialNameNumber
   const handleKeyDown = (event) => {
     console.log("handleKeyDown:", event);
     console.log("validSVG:", isValidSVG);
-    if (event.ctrlKey && event.shiftKey && event.code === 'KeyQ') {
+    if (event.altKey && event.shiftKey && event.code === 'KeyQ') {
       event.preventDefault();
       console.log("QR code");
       if (isValidSVG) {
@@ -118,7 +118,7 @@ export default function Index({ initialMyName, initialMessage, initialNameNumber
         }
       }
     }
-    else if (event.ctrlKey && event.shiftKey && event.code === 'KeyC') {
+    else if (event.altKey && event.shiftKey && event.code === 'KeyC') {
       event.preventDefault();
       console.log("copy to clipboard");
       if (isValidSVG) {
@@ -126,7 +126,7 @@ export default function Index({ initialMyName, initialMessage, initialNameNumber
         copyToClipboard(plainComposedMessage);
       }
     }
-    else if (event.ctrlKey && event.shiftKey && event.code === 'KeyS') {
+    else if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
       event.preventDefault();
       console.log("send SMS");
       if (isValidSVG) {
@@ -310,11 +310,11 @@ export default function Index({ initialMyName, initialMessage, initialNameNumber
           <Grid container maxWidth="400px" columnSpacing={1} rowSpacing={2} sx={{ position: "relative" }}>
             <Grid size={12} sx={{ fontSize: "16pt", fontweight: "600", textAlign: "center", borderBottom: "solid 2px", borderBottomColor: "primary.main" }}>Shortcuts</Grid>
             <Grid size={{ xs: 6, md: 5 }} sx={{ textAlign: "right", verticalAlign: "baseline" }} pt={1}>send SMS:</Grid>
-            <Grid size={{ xs: 6, md: 5 }} pt={1}><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>S</Kbd></Grid>
+            <Grid size={{ xs: 6, md: 5 }} pt={1}><Kbd>Ctrl/⌘</Kbd>+<Kbd>Enter</Kbd></Grid>
             <Grid size={{ xs: 6, md: 5 }} sx={{ textAlign: "right" }}>copy message:</Grid>
-            <Grid size={{ xs: 6, md: 5 }}><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>C</Kbd></Grid>
+            <Grid size={{ xs: 6, md: 5 }}><Kbd>Alt/⌥</Kbd>+<Kbd>Shift</Kbd>+<Kbd>C</Kbd></Grid>
             <Grid size={{ xs: 6, md: 5 }} sx={{ textAlign: "right" }}>show QR code:</Grid>
-            <Grid size={{ xs: 6, md: 5 }}><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>Q</Kbd></Grid>
+            <Grid size={{ xs: 6, md: 5 }}><Kbd>Alt/⌥</Kbd>+<Kbd>Shift</Kbd>+<Kbd>Q</Kbd></Grid>
           </Grid>
         </Container>
       </Container>
