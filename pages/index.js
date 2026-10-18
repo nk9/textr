@@ -251,7 +251,8 @@ export default function Index({ initialMyName, initialMessage, initialNameNumber
     aria-haspopup="true"
     onMouseEnter={handlePopoverOpen}
     onMouseLeave={handlePopoverClose}
-    fontSize='inherit' />)
+    fontSize='inherit'
+    sx={{ position: 'relative', top: '2px' }} />)
 
   return (
     <>
