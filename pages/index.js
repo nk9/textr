@@ -308,7 +308,7 @@ export default function Index({ initialMyName, initialMessage, initialNameNumber
                   value={isValidSVG ? smsto : fakeQRCode}
                   size={256}
                   fgColor={isValidSVG ? "black" : "lightgray"} />
-                {!isValidSVG ? <Typography sx={{ position: 'absolute', top: '50px', left: '0', zIndex: '2', fontWeight: 'bold', color: 'blue', fontSize: '40pt', WebkitTextStrokeColor: "white", WebkitTextStrokeWidth: "2px", textAlign: 'center' }}>Fill in all fields</Typography> : ''}
+                {!isValidSVG ? <Typography sx={{ position: 'absolute', top: '50px', left: '0', zIndex: '2', fontWeight: 'bold', color: 'blue', fontSize: '40pt', WebkitTextStrokeColor: "white", WebkitTextStrokeWidth: "4px", paintOrder: "stroke fill", textAlign: 'center' }}>Fill in all fields</Typography> : ''}
               </Box>
             </Box>
           </Grid>
