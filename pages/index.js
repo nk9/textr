@@ -1,4 +1,5 @@
 import CancelIcon from '@mui/icons-material/Cancel';
+import PhoneIcon from '@mui/icons-material/Phone';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import QrCodeIcon from '@mui/icons-material/QrCode';
 import { Typography } from '@mui/material';
@@ -341,13 +342,15 @@ export default function Index({ initialMyName, initialMessage, initialNameNumber
         onClose={handlePopoverClose}
         disableRestoreFocus
       >
-        <Box sx={{ display: 'flex', justifyContent: 'center', p: 5, pb: 3, flexDirection: 'column' }}>
+        <Box sx={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', width: 360, height: 408 }}>
+          {/* Icon sits 40px above the QR code, well clear of its quiet zone */}
+          <PhoneIcon sx={{ position: 'absolute', bottom: 'calc(50% + 50px + 40px)', fontSize: 48, color: 'black' }} />
           <QRCodeSVG
             value={`tel:${number};`}
             size={100}
             fgColor='black'
           />
-          <Typography sx={{ textAlign: "center", pt: 2 }}>ctrl+shift+q</Typography>
+          <Typography sx={{ position: 'absolute', top: 'calc(50% + 50px + 16px)', width: '100%', textAlign: "center" }}>ctrl+shift+q</Typography>
         </Box>
       </Popover>
     </>
