@@ -1,4 +1,6 @@
 import CancelIcon from '@mui/icons-material/Cancel';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import PhoneIcon from '@mui/icons-material/Phone';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import QrCodeIcon from '@mui/icons-material/QrCode';
@@ -43,6 +45,41 @@ function copyToClipboard(text) {
   });
 }
 
+// Parse one "name<tab or ;>…<tab or ;>number" row, using the first and last
+// columns and ignoring any in between
+function parseRow(row) {
+  var outName = undefined;
+  var outNum = undefined;
+  var splitChar = '\t';
+
+  if (row.indexOf(';') >= 0) {
+    splitChar = ';';
+  }
+
+  let columns = row.trim().split(splitChar);
+  let rawName = columns[0];
+  let rawNum = columns.length >= 2 ? columns[columns.length - 1] : undefined;
+
+  if (rawName && rawName.length >= 2) {
+    if (rawName.indexOf(' ') >= 0) {
+      let [rawFirst, _] = rawName.split(' ');
+      outName = rawFirst
+    } else {
+      outName = rawName
+    }
+  }
+
+  if (rawNum && rawNum.length >= 10) {
+    let stripped = rawNum.replace(/\D/g, '');
+
+    if (stripped.length >= 10) {
+      outNum = `${stripped.slice(0, 3)}-${stripped.slice(3, 6)}-${stripped.slice(6)}`
+    }
+  }
+
+  return { name: outName, number: outNum };
+}
+
 let MY_NAME_COOKIE = 'MY_NAME';
 let MESSAGE_TEMPLATE_COOKIE = 'MESSAGE_TEMPLATE';
 
@@ -62,6 +99,7 @@ export const getServerSideProps = ({ req, res, query }) => {
 export default function Index({ initialMyName, initialMessage, initialNameNumber, isMac }) {
   const [myName, setMyName] = useState(initialMyName)
   const [nameNumber, setNameNumber] = useState(initialNameNumber)
+  const [rowIndex, setRowIndex] = useState(0)
   const [message, setMessage] = useState(initialMessage)
   const [name, setName] = useState('')
   const [number, setNumber] = useState('')
@@ -75,6 +113,18 @@ export default function Index({ initialMyName, initialMessage, initialNameNumber
   const anchorRef = useRef(null);
 
   const ENVIRONMENT = process.env.NODE_ENV || "development";
+
+  // One person per non-blank line. Keep the index in range as lines are edited.
+  const rows = nameNumber.split('\n').filter((row) => row.trim());
+  const rowCount = rows.length;
+  const currentRow = Math.min(rowIndex, Math.max(rowCount - 1, 0));
+
+  // Wrap around at both ends, so lists can be worked in either direction
+  const goToRow = (delta) => {
+    if (rowCount > 0) {
+      setRowIndex((currentRow + delta + rowCount) % rowCount);
+    }
+  };
 
   useEffect(() => {
     if (myName.length > 0) {
@@ -114,7 +164,11 @@ export default function Index({ initialMyName, initialMessage, initialNameNumber
   const handleKeyDown = (event) => {
     console.log("handleKeyDown:", event);
     console.log("validSVG:", isValidSVG);
-    if (isShortcutModifier(event) && event.code === 'KeyQ') {
+    if (isShortcutModifier(event) && (event.code === 'Comma' || event.code === 'Period')) {
+      event.preventDefault();
+      goToRow(event.code === 'Comma' ? -1 : 1);
+    }
+    else if (isShortcutModifier(event) && event.code === 'KeyQ') {
       event.preventDefault();
       console.log("QR code");
       if (isValidSVG) {
@@ -161,7 +215,7 @@ export default function Index({ initialMyName, initialMessage, initialNameNumber
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isValidSVG, plainComposedMessage, number]);
+  }, [isValidSVG, plainComposedMessage, number, currentRow, rowCount]);
 
 
   //
@@ -188,39 +242,10 @@ export default function Index({ initialMyName, initialMessage, initialNameNumber
   let smsto = `smsto:${number}:${plainComposedMessage}`
 
   useEffect(() => {
-    var outName = undefined;
-    var outNum = undefined;
-    var splitChar = '\t';
-
-    if (nameNumber.indexOf(';') >= 0) {
-      splitChar = ';';
-    }
-
-    // Use the first and last columns, ignoring any in between
-    let columns = nameNumber.trim().split(splitChar);
-    let rawName = columns[0];
-    let rawNum = columns.length >= 2 ? columns[columns.length - 1] : undefined;
-
-    if (rawName && rawName.length >= 2) {
-      if (rawName.indexOf(' ') >= 0) {
-        let [rawFirst, _] = rawName.split(' ');
-        outName = rawFirst
-      } else {
-        outName = rawName
-      }
-    }
-
-    if (rawNum && rawNum.length >= 10) {
-      let stripped = rawNum.replace(/\D/g, '');
-      
-      if (stripped.length >= 10) {
-        outNum = `${stripped.slice(0, 3)}-${stripped.slice(3, 6)}-${stripped.slice(6)}`
-      }
-    }
-
-    setNumber(outNum);
-    setName(outName);
-  }, [nameNumber])
+    let { name, number } = parseRow(rows[currentRow] || '');
+    setNumber(number);
+    setName(name);
+  }, [nameNumber, currentRow])
 
   useEffect(() => {
     setCookie(MY_NAME_COOKIE, myName, {
@@ -280,16 +305,29 @@ export default function Index({ initialMyName, initialMessage, initialNameNumber
                 <TextField
                   value={nameNumber}
                   inputRef={nameNumberRef}
-                  label="Their name & cell number"
+                  label="Their names & cell numbers"
                   variant="outlined"
+                  multiline
+                  minRows={2}
+                  maxRows={8}
                   fullWidth
                   onChange={(e) => setNameNumber(e.target.value)} />
               </Box>
-              <IconButton aria-label="delete" size="large" onClick={() => setNameNumber('')}>
+              <IconButton aria-label="delete" size="large" onClick={() => { setNameNumber(''); setRowIndex(0); }}>
                 <CancelIcon fontSize="inherit" />
               </IconButton>
             </Box>
-            (Separated by tab or semicolon. You can paste in the two cells from Google Sheets.)
+            {rowCount > 1 &&
+              <Box sx={{ display: 'flex', alignItems: 'center', width: '370px', justifyContent: 'center' }}>
+                <IconButton aria-label="previous person" onClick={() => goToRow(-1)}>
+                  <ChevronLeftIcon />
+                </IconButton>
+                {currentRow + 1} of {rowCount}
+                <IconButton aria-label="next person" onClick={() => goToRow(1)}>
+                  <ChevronRightIcon />
+                </IconButton>
+              </Box>}
+            (Name & number, separated by tab or semicolon. One person per line. You can paste in rows from Google Sheets. Middle columns are ignored.)
             <Box sx={{ my: 4, maxwidth: '350px' }}>
               <TextField
                 value={message}
@@ -327,16 +365,18 @@ export default function Index({ initialMyName, initialMessage, initialNameNumber
           </Grid>
         </Grid>
         <Container sx={{ display: "flex", justifyContent: "center" }}>
-          <Grid container maxWidth="400px" columnSpacing={1} rowSpacing={2} sx={{ position: "relative" }}>
+          <Grid container maxWidth="520px" columnSpacing={1} rowSpacing={2} sx={{ position: "relative", whiteSpace: "nowrap" }}>
             <Grid size={12} sx={{ fontSize: "16pt", fontweight: "600", textAlign: "center", borderBottom: "solid 2px", borderBottomColor: "primary.main" }}>Shortcuts</Grid>
-            <Grid size={{ xs: 6, md: 5 }} sx={{ textAlign: "right", verticalAlign: "baseline" }} pt={1}>send SMS:</Grid>
-            <Grid size={{ xs: 6, md: 5 }} pt={1}><Kbd>{isMac ? '⌘' : 'Ctrl'}</Kbd>+<Kbd>Enter</Kbd></Grid>
-            <Grid size={{ xs: 6, md: 5 }} sx={{ textAlign: "right" }}>copy message:</Grid>
-            <Grid size={{ xs: 6, md: 5 }}><Kbd>{isMac ? 'Ctrl' : 'Alt'}</Kbd>+<Kbd>Shift</Kbd>+<Kbd>C</Kbd></Grid>
-            <Grid size={{ xs: 6, md: 5 }} sx={{ textAlign: "right" }}>call:</Grid>
-            <Grid size={{ xs: 6, md: 5 }}><Kbd>{isMac ? '⌘' : 'Ctrl'}</Kbd>+<Kbd>Shift</Kbd>+<Kbd>Enter</Kbd></Grid>
-            <Grid size={{ xs: 6, md: 5 }} sx={{ textAlign: "right" }}>show call QR code:</Grid>
-            <Grid size={{ xs: 6, md: 5 }}><Kbd>{isMac ? 'Ctrl' : 'Alt'}</Kbd>+<Kbd>Shift</Kbd>+<Kbd>Q</Kbd></Grid>
+            <Grid size={6} sx={{ textAlign: "right", verticalAlign: "baseline" }} pt={1}>send SMS:</Grid>
+            <Grid size={6} pt={1}><Kbd>{isMac ? '⌘' : 'Ctrl'}</Kbd>+<Kbd>Enter</Kbd></Grid>
+            <Grid size={6} sx={{ textAlign: "right" }}>copy message:</Grid>
+            <Grid size={6}><Kbd>{isMac ? 'Ctrl' : 'Alt'}</Kbd>+<Kbd>Shift</Kbd>+<Kbd>C</Kbd></Grid>
+            <Grid size={6} sx={{ textAlign: "right" }}>call:</Grid>
+            <Grid size={6}><Kbd>{isMac ? '⌘' : 'Ctrl'}</Kbd>+<Kbd>Shift</Kbd>+<Kbd>Enter</Kbd></Grid>
+            <Grid size={6} sx={{ textAlign: "right" }}>previous/next person:</Grid>
+            <Grid size={6}><Kbd>{isMac ? 'Ctrl' : 'Alt'}</Kbd>+<Kbd>Shift</Kbd>+<Kbd>&lt;</Kbd> / <Kbd>&gt;</Kbd></Grid>
+            <Grid size={6} sx={{ textAlign: "right" }}>show call QR code:</Grid>
+            <Grid size={6}><Kbd>{isMac ? 'Ctrl' : 'Alt'}</Kbd>+<Kbd>Shift</Kbd>+<Kbd>Q</Kbd></Grid>
           </Grid>
         </Container>
       </Container>
