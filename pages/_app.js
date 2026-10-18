@@ -18,6 +18,8 @@ export default function MyApp(props) {
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
         <Component {...pageProps} />
+        <script data-goatcounter="https://rudolf-risotto.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
       </ThemeProvider>
     </AppCacheProvider>
   );
