@@ -196,7 +196,10 @@ export default function Index({ initialMyName, initialMessage, initialNameNumber
       splitChar = ';';
     }
 
-    let [rawName, rawNum] = nameNumber.split(splitChar)
+    // Use the first and last columns, ignoring any in between
+    let columns = nameNumber.trim().split(splitChar);
+    let rawName = columns[0];
+    let rawNum = columns.length >= 2 ? columns[columns.length - 1] : undefined;
 
     if (rawName && rawName.length >= 2) {
       if (rawName.indexOf(' ') >= 0) {
