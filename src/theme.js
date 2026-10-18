@@ -24,6 +24,15 @@ const theme = createTheme({
   typography: {
     fontFamily: roboto.style.fontFamily,
   },
+  components: {
+    MuiCssBaseline: {
+      styleOverrides: {
+        // Reserve space for the scrollbar so content doesn't shift sideways
+        // when the page grows tall enough to scroll
+        html: { scrollbarGutter: 'stable' },
+      },
+    },
+  },
 });
 
 export default theme;
