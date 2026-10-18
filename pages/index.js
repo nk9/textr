@@ -53,11 +53,12 @@ export const getServerSideProps = ({ req, res, query }) => {
   const initialMyName = getCookie(MY_NAME_COOKIE, { req, res }) || '';
   const initialMessage = getCookie(MESSAGE_TEMPLATE_COOKIE, { req, res }) || defaultMessage;
   const initialNameNumber = query.to || '';
+  const isMac = /Macintosh|Mac OS X/.test(req.headers['user-agent'] || '');
 
-  return { props: { initialMyName, initialMessage, initialNameNumber } };
+  return { props: { initialMyName, initialMessage, initialNameNumber, isMac } };
 };
 
-export default function Index({ initialMyName, initialMessage, initialNameNumber }) {
+export default function Index({ initialMyName, initialMessage, initialNameNumber, isMac }) {
   const [myName, setMyName] = useState(initialMyName)
   const [nameNumber, setNameNumber] = useState(initialNameNumber)
   const [message, setMessage] = useState(initialMessage)
@@ -103,10 +104,16 @@ export default function Index({ initialMyName, initialMessage, initialNameNumber
 
   //
   // Set up keyboard shortcuts
+  // On Mac, Option+letter types characters into the focused field, but Ctrl+Shift
+  // is unused by browsers. Elsewhere, browsers claim Ctrl+Shift, so use Alt+Shift.
+  const isShortcutModifier = (event) => isMac
+    ? event.ctrlKey && event.shiftKey && !event.altKey && !event.metaKey
+    : event.altKey && event.shiftKey && !event.ctrlKey && !event.metaKey;
+
   const handleKeyDown = (event) => {
     console.log("handleKeyDown:", event);
     console.log("validSVG:", isValidSVG);
-    if (event.altKey && event.shiftKey && event.code === 'KeyQ') {
+    if (isShortcutModifier(event) && event.code === 'KeyQ') {
       event.preventDefault();
       console.log("QR code");
       if (isValidSVG) {
@@ -118,7 +125,7 @@ export default function Index({ initialMyName, initialMessage, initialNameNumber
         }
       }
     }
-    else if (event.altKey && event.shiftKey && event.code === 'KeyC') {
+    else if (isShortcutModifier(event) && event.code === 'KeyC') {
       event.preventDefault();
       console.log("copy to clipboard");
       if (isValidSVG) {
@@ -126,7 +133,7 @@ export default function Index({ initialMyName, initialMessage, initialNameNumber
         copyToClipboard(plainComposedMessage);
       }
     }
-    else if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+    else if ((isMac ? event.metaKey : event.ctrlKey) && event.key === 'Enter') {
       event.preventDefault();
       console.log("send SMS");
       if (isValidSVG) {
@@ -310,11 +317,11 @@ export default function Index({ initialMyName, initialMessage, initialNameNumber
           <Grid container maxWidth="400px" columnSpacing={1} rowSpacing={2} sx={{ position: "relative" }}>
             <Grid size={12} sx={{ fontSize: "16pt", fontweight: "600", textAlign: "center", borderBottom: "solid 2px", borderBottomColor: "primary.main" }}>Shortcuts</Grid>
             <Grid size={{ xs: 6, md: 5 }} sx={{ textAlign: "right", verticalAlign: "baseline" }} pt={1}>send SMS:</Grid>
-            <Grid size={{ xs: 6, md: 5 }} pt={1}><Kbd>Ctrl/⌘</Kbd>+<Kbd>Enter</Kbd></Grid>
+            <Grid size={{ xs: 6, md: 5 }} pt={1}><Kbd>{isMac ? '⌘' : 'Ctrl'}</Kbd>+<Kbd>Enter</Kbd></Grid>
             <Grid size={{ xs: 6, md: 5 }} sx={{ textAlign: "right" }}>copy message:</Grid>
-            <Grid size={{ xs: 6, md: 5 }}><Kbd>Alt/⌥</Kbd>+<Kbd>Shift</Kbd>+<Kbd>C</Kbd></Grid>
+            <Grid size={{ xs: 6, md: 5 }}><Kbd>{isMac ? 'Ctrl' : 'Alt'}</Kbd>+<Kbd>Shift</Kbd>+<Kbd>C</Kbd></Grid>
             <Grid size={{ xs: 6, md: 5 }} sx={{ textAlign: "right" }}>show QR code:</Grid>
-            <Grid size={{ xs: 6, md: 5 }}><Kbd>Alt/⌥</Kbd>+<Kbd>Shift</Kbd>+<Kbd>Q</Kbd></Grid>
+            <Grid size={{ xs: 6, md: 5 }}><Kbd>{isMac ? 'Ctrl' : 'Alt'}</Kbd>+<Kbd>Shift</Kbd>+<Kbd>Q</Kbd></Grid>
           </Grid>
         </Container>
       </Container>
