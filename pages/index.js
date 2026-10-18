@@ -296,7 +296,7 @@ export default function Index({ initialMyName, initialMessage, initialNameNumber
                 variant="outlined"
                 InputLabelProps={{ shrink: shrinkName }}
                 onChange={(e) => setMyName(e.target.value)} />
-              <IconButton aria-label="delete" size="large" onClick={() => setMyName('')}>
+              <IconButton aria-label="delete" size="large" disabled={!myName} onClick={() => setMyName('')}>
                 <CancelIcon fontSize="inherit" />
               </IconButton>
             </Box>
@@ -313,7 +313,7 @@ export default function Index({ initialMyName, initialMessage, initialNameNumber
                   fullWidth
                   onChange={(e) => setNameNumber(e.target.value)} />
               </Box>
-              <IconButton aria-label="delete" size="large" onClick={() => { setNameNumber(''); setRowIndex(0); }}>
+              <IconButton aria-label="delete" size="large" disabled={!nameNumber} onClick={() => { setNameNumber(''); setRowIndex(0); }}>
                 <CancelIcon fontSize="inherit" />
               </IconButton>
             </Box>
