@@ -300,7 +300,7 @@ export default function Index({ initialMyName, initialMessage, initialNameNumber
                 <CancelIcon fontSize="inherit" />
               </IconButton>
             </Box>
-            <Box sx={{ mt: 4, maxwidth: '350px', display: 'flex' }}>
+            <Box sx={{ mt: 4, maxwidth: '350px', display: 'flex', alignItems: 'flex-start' }}>
               <Box sx={{ width: '370px' }}>
                 <TextField
                   value={nameNumber}
