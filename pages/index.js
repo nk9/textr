@@ -395,6 +395,9 @@ export default function Index({ initialMyName, initialMessage, initialNameNumber
         }}
         onClose={handlePopoverClose}
         disableRestoreFocus
+        // Scroll lock pads <body> by the scrollbar width, shifting the icon out from
+        // under the cursor, which closes and reopens the popover in a loop
+        disableScrollLock
       >
         <Box sx={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', width: 360, height: 408 }}>
           {/* Icon sits 40px above the QR code, well clear of its quiet zone */}
