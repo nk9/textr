@@ -134,6 +134,14 @@ export default function Index({ initialMyName, initialMessage, initialNameNumber
         copyToClipboard(plainComposedMessage);
       }
     }
+    else if ((isMac ? event.metaKey : event.ctrlKey) && event.shiftKey && event.key === 'Enter') {
+      event.preventDefault();
+      console.log("call");
+      if (number) {
+        let link = document.getElementById("telLink");
+        link.click();
+      }
+    }
     else if ((isMac ? event.metaKey : event.ctrlKey) && event.key === 'Enter') {
       event.preventDefault();
       console.log("send SMS");
@@ -153,7 +161,7 @@ export default function Index({ initialMyName, initialMessage, initialNameNumber
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isValidSVG, plainComposedMessage]);
+  }, [isValidSVG, plainComposedMessage, number]);
 
 
   //
@@ -297,7 +305,7 @@ export default function Index({ initialMyName, initialMessage, initialNameNumber
             <Item>
               <Grid container spacing={1}>
                 <Grid size={{ xs: 3, md: 2 }} sx={{ textAlign: 'right', fontWeight: 'bold' }}>To:</Grid>
-                <Grid size={{ xs: 9, md: 10 }}>{number} {number && qrcodeIcon}</Grid>
+                <Grid size={{ xs: 9, md: 10 }}>{number && <Link id="telLink" href={`tel:${number}`}>{number}</Link>} {number && qrcodeIcon}</Grid>
                 <Grid size={{ xs: 3, md: 2 }} sx={{ textAlign: 'right', fontWeight: 'bold' }}>Message:</Grid>
                 <Grid size={{ xs: 9, md: 10 }}>{composedMessage}</Grid>
               </Grid>
@@ -321,7 +329,9 @@ export default function Index({ initialMyName, initialMessage, initialNameNumber
             <Grid size={{ xs: 6, md: 5 }} pt={1}><Kbd>{isMac ? '⌘' : 'Ctrl'}</Kbd>+<Kbd>Enter</Kbd></Grid>
             <Grid size={{ xs: 6, md: 5 }} sx={{ textAlign: "right" }}>copy message:</Grid>
             <Grid size={{ xs: 6, md: 5 }}><Kbd>{isMac ? 'Ctrl' : 'Alt'}</Kbd>+<Kbd>Shift</Kbd>+<Kbd>C</Kbd></Grid>
-            <Grid size={{ xs: 6, md: 5 }} sx={{ textAlign: "right" }}>show QR code:</Grid>
+            <Grid size={{ xs: 6, md: 5 }} sx={{ textAlign: "right" }}>call:</Grid>
+            <Grid size={{ xs: 6, md: 5 }}><Kbd>{isMac ? '⌘' : 'Ctrl'}</Kbd>+<Kbd>Shift</Kbd>+<Kbd>Enter</Kbd></Grid>
+            <Grid size={{ xs: 6, md: 5 }} sx={{ textAlign: "right" }}>show call QR code:</Grid>
             <Grid size={{ xs: 6, md: 5 }}><Kbd>{isMac ? 'Ctrl' : 'Alt'}</Kbd>+<Kbd>Shift</Kbd>+<Kbd>Q</Kbd></Grid>
           </Grid>
         </Container>
