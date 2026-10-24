@@ -239,7 +239,7 @@ export default function Index({ initialMyName, initialMessage, initialNameNumber
     setIsValidSVG(isValid);
   }, [myName, name, number, composedMessage]);
 
-  let smsto = `smsto:${number}:${plainComposedMessage}`
+  let smsto = `sms:${number}?body=${encodeURIComponent(plainComposedMessage)}`
 
   useEffect(() => {
     let { name, number } = parseRow(rows[currentRow] || '');
