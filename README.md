@@ -4,13 +4,14 @@
 ☎️ <a href="https://textr-mi.netlify.app/">textr-mi.netlify.app</a> ☎️
 </h3>
 
+
 Textr is a free tool that makes volunteer confirms faster and less error-prone. Stop fat-fingering numbers or sending a text with the wrong name.
 
 ## How it works
 
 ![Animated walkthrough of using Textr](assets/howto-multi.webp)
 
-1. Enter your name to personalize your texts.
+1. On your laptop, load up the site and enter your name to personalize your texts.
 2. Paste in your list of people. Each line needs a name and a phone number, separated by a tab or semicolon. You can copy rows straight out of Google Sheets, and any columns between the name and the number are ignored.
 3. Write your message template. `{firstname}` and `{myname}` are filled in for each person.
 4. Send the text, or call, with one click or a keyboard shortcut. Or scan the "text" or "call" QR codes with your phone.
