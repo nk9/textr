@@ -5,9 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "post-update": "echo \"codesandbox preview only, need an update\" && pnpm update --latest"
+    "start": "next start"
   },
   "dependencies": {
     "@emotion/cache": "latest",
@@ -25,9 +23,5 @@
     "react-dom": "latest",
     "sass": "^1.80.6",
     "string-template": "^1.0.0"
-  },
-  "devDependencies": {
-    "eslint": "latest",
-    "eslint-config-next": "latest"
   }
 }
