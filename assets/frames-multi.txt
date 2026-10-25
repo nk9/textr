@@ -1,0 +1,13 @@
+file 'howto-multi/howto-frame-0.png'
+duration 2
+file 'howto-multi/howto-frame-1.png'
+duration 2
+file 'howto-multi/howto-frame-2.png'
+duration 2
+file 'howto-multi/howto-frame-3.png'
+duration 2
+file 'howto-multi/howto-frame-4.png'
+duration 2
+file 'howto-multi/howto-frame-5.png'
+duration 4
+file 'howto-multi/howto-frame-5.png'

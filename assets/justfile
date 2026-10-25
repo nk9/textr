@@ -1,0 +1,3 @@
+built-multi:
+    ffmpeg -f concat -safe 0 -i frames-multi.txt -fps_mode vfr \
+      -c:v libwebp_anim -lossless 1 -loop 0 howto-multi.webp
