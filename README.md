@@ -1,8 +1,8 @@
 # Textr
 
-<p align="center">
-☎️ <b><a href="https://textr-mi.netlify.app/">textr-mi.netlify.app</a></b> ☎️
-</p>
+<h3 align="center">
+☎️ <a href="https://textr-mi.netlify.app/">textr-mi.netlify.app</a> ☎️
+</h3>
 
 Textr is a free tool that makes volunteer confirms faster and less error-prone. Stop fat-fingering numbers or sending a text with the wrong name.
 
