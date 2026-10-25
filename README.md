@@ -1,49 +1,26 @@
-# Material UI - Next.js Pages Router example
+# Textr
 
-## How to use
+### ☎️ **[textr-mi.netlify.app](https://textr-mi.netlify.app/)** ☎️
 
-Download the example [or clone the repo](https://github.com/mui/material-ui):
+Textr is a free tool that makes volunteer confirms faster and less error-prone. Stop fat-fingering numbers or sending a text with the wrong name.
 
-<!-- #default-branch-switch -->
+## How it works
 
-```bash
-curl https://codeload.github.com/mui/material-ui/tar.gz/master | tar -xz --strip=2  material-ui-master/examples/material-ui-nextjs-pages-router
-cd material-ui-nextjs-pages-router
-```
+![Animated walkthrough of using Textr](assets/howto-multi.webp)
 
-Install it and run:
+1. Enter your name to personalize your texts.
+2. Paste in your list of people. Each line needs a name and a phone number, separated by a tab or semicolon. You can copy rows straight out of Google Sheets, and any columns between the name and the number are ignored.
+3. Write your message template. `{firstname}` and `{myname}` are filled in for each person.
+4. Send the text, or call, with one click or a keyboard shortcut. Or scan the "text" or "call" QR codes with your phone.
+5. Use the arrows or a shortcut to move on to the next person.
+
+The default message mentions Michigan, but you can change it to say whatever you like. Your name and message template are saved in a cookie, so they'll still be there next time. All data stays on your device.
+
+## Development
 
 ```bash
 npm install
 npm run dev
 ```
 
-or:
-
-<!-- #default-branch-switch -->
-
-[![Edit on StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/mui/material-ui/tree/master/examples/material-ui-nextjs-pages-router)
-
-[![Edit on CodeSandbox](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/p/sandbox/github/mui/material-ui/tree/master/examples/material-ui-nextjs-pages-router)
-
-## The idea behind the example
-
-**Note:** This example is set up to use the Next.js Pages Router.
-As of Next.js 13.4, the newer App Router pattern is stable.
-We recommend starting new projects with the [Material UI with Next.js (App Router) example](https://github.com/mui/material-ui/tree/master/examples/material-ui-nextjs) unless you need (or prefer) the Pages Router.
-
-The project uses [Next.js](https://github.com/vercel/next.js), which is a framework for server-rendered React apps.
-It includes `@mui/material` and its peer dependencies, including [Emotion](https://emotion.sh/docs/introduction), the default style engine in Material UI v6.
-If you prefer, you can [use styled-components instead](https://mui.com/material-ui/integrations/interoperability/#styled-components).
-
-## The Link component
-
-The [example folder](https://github.com/mui/material-ui/tree/HEAD/examples/material-ui-nextjs-pages-router) provides an adapter for the use of [Next.js's Link component](https://nextjs.org/docs/pages/api-reference/components/link) with Material UI.
-More information [in the documentation](https://mui.com/material-ui/integrations/routing/#next-js-pages-router).
-
-## What's next?
-
-<!-- #default-branch-switch -->
-
-You now have a working example project.
-You can head back to the documentation and continue by browsing the [templates](https://mui.com/material-ui/getting-started/templates/) section.
+Built with Next.js and Material UI. Feedback and pull requests are welcome!
